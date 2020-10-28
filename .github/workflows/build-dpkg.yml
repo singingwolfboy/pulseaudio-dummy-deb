@@ -1,0 +1,20 @@
+name: Build dpkg
+on:
+  pull_request:
+    types: [synchronize, opened, reopened]
+
+jobs:
+  build-dpkg:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: nylas/build-dpkg-stretch@custom-dh-virtualenv
+      id: build-dpkg
+      with:
+        args: --unsigned-source --unsigned-changes
+
+    - uses: actions/upload-artifact@v1
+      with:
+        name: ${{ steps.build-dpkg.outputs.filename }}
+        path: ${{ steps.build-dpkg.outputs.filename }}
